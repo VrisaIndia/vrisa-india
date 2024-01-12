@@ -65,23 +65,25 @@
             </div>
             <div class="row g-5">
                 <div class="col-lg-6 wow slideInUp" data-wow-delay="0.3s">
-                    <form>
+                    <form method="POST" id="newForm" enctype="multipart/form-data">
+                        @csrf
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <input type="text" class="form-control border-0 bg-light px-4" placeholder="Your Name" style="height: 55px;">
+                                <input type="text" name="name" class="form-control border-0 bg-light px-4" placeholder="Your Name" style="height: 55px;">
                             </div>
                             <div class="col-md-6">
-                                <input type="email" class="form-control border-0 bg-light px-4" placeholder="Your Email" style="height: 55px;">
+                                <input type="email" name="email" class="form-control border-0 bg-light px-4" placeholder="Your Email" style="height: 55px;">
                             </div>
                             <div class="col-12">
-                                <input type="text" class="form-control border-0 bg-light px-4" placeholder="Subject" style="height: 55px;">
+                                <input type="text" id="service_type" name="serviceType" class="form-control border-0 bg-light px-4" placeholder="Subject" style="height: 55px;">
                             </div>
                             <div class="col-12">
-                                <textarea class="form-control border-0 bg-light px-4 py-3" rows="4" placeholder="Message"></textarea>
+                                <textarea id="message"  name="message" class="form-control border-0 bg-light px-4 py-3" rows="4" placeholder="Message"></textarea>
                             </div>
                             <div class="col-12">
                                 <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
                             </div>
+                            <div id="success" style="color: black"></div>
                         </div>
                     </form>
                 </div>
@@ -116,4 +118,75 @@
         </div>
     </div>
     <!-- Vendor End -->    
+
+    <script type="text/javascript">
+        // $('.load').show();
+        // $('#formSubmit').hide();
+            
+        $(document).ready(function(){
+            $("#newForm").validate({
+                rules: {
+                    name: {
+                        required: true,
+                    },
+                    // message: {
+                    //     required: true,
+                    // },
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    serviceType: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "Please enter your name",
+                    },
+                    // message: {
+                    //     required: "Please enter your message",
+                    // },
+                    email: {
+                        required: "Please enter a valid email address",
+                        email: "Please enter a valid email address",
+                    },
+                    serviceType: {
+                        required: "Please select a service type",
+                    }
+                },
+                submitHandler: function(form) {
+                    $('.load').show();
+                    $('#formSubmit').hide();
+                    // Form is valid, submit using AJAX
+                    var name = $("input[name=name]").val();
+                    var message = $("#message").val();
+                    var serviceType = $("#service_type").val();
+                    var email = $("input[name=email]").val();
+                    console.log(message);
+                    $.ajax({
+                        type:'POST',
+                        url:"{{ route('submitForm') }}",
+                        data:{
+                            name: name, 
+                            message: message, 
+                            email: email, 
+                            serviceType: serviceType,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success:function(data){
+                            $('.load').hide();
+                            $('#formSubmit').show();
+                            var messageBox = $('#success').text(data.message);
+                            setTimeout(function () {
+                                messageBox.fadeOut(500, function () {
+                                    messageBox.remove();
+                                });
+                            }, 3000);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 @endsection

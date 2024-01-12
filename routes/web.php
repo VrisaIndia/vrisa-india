@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +30,8 @@ Route::get('/about-us', function () {
 Route::get('/services', function () {
     return view('service');
 })->name('services');
+
+Route::post('mail_sent', [HomeController::class, 'formSubmit'])->name('submitForm');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

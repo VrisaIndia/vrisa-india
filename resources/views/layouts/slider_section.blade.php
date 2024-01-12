@@ -7,9 +7,9 @@
                     <h5 class="text-white text-uppercase mb-3 animated slideInDown">Creative & Innovative</h5>
                     <h1 class="display-1 text-white mb-md-4 animated zoomIn">Creative & Innovative Design Solution
                     </h1>
-                    <a href="quote.html" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Free
+                    <a href="{{ route('contact_us')}}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Free
                         Quote</a>
-                    <a href="" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">Contact
+                    <a href="{{ route('contact_us')}}" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">Contact
                         Us</a>
                 </div>
             </div>
@@ -21,9 +21,9 @@
                     <h5 class="text-white text-uppercase mb-3 animated slideInDown">Creative & Innovative</h5>
                     <h1 class="display-1 text-white mb-md-4 animated zoomIn">Creative & Innovative Design Solution
                     </h1>
-                    <a href="quote.html" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Free
+                    <a href="{{ route('contact_us')}}" class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Free
                         Quote</a>
-                    <a href="" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">Contact
+                    <a href="{{ route('contact_us')}}" class="btn btn-outline-light py-md-3 px-md-5 animated slideInRight">Contact
                         Us</a>
                 </div>
             </div>

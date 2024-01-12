@@ -1,6 +1,11 @@
 @extends('layouts.frontend.app')
 @section('content')
     @include('layouts.slider_section')
+    <style>
+        .error{
+            color: white;
+        }
+    </style>
     <!-- Facts Start -->
     <div class="container-fluid facts py-5 pt-lg-0">
         <div class="container py-5 pt-lg-0">
@@ -366,30 +371,33 @@
                 </div>
                 <div class="col-lg-5">
                     <div class="bg-primary rounded h-100 d-flex align-items-center p-5 wow zoomIn" data-wow-delay="0.9s">
-                        <form>
+                        <form method="POST" id="newForm" enctype="multipart/form-data">
+                            @csrf
                             <div class="row g-3">
                                 <div class="col-xl-12">
-                                    <input type="text" class="form-control bg-light border-0" placeholder="Your Name"
-                                        style="height: 55px;">
+                                    <input type="text" name="name" class="form-control bg-light border-0" placeholder="Your Name"
+                                        style="height: 55px;" required>
                                 </div>
                                 <div class="col-12">
-                                    <input type="email" class="form-control bg-light border-0" placeholder="Your Email"
-                                        style="height: 55px;">
+                                    <input type="email" name="email" class="form-control bg-light border-0" placeholder="Your Email"
+                                        style="height: 55px;" required>
                                 </div>
                                 <div class="col-12">
-                                    <select class="form-select bg-light border-0" style="height: 55px;">
-                                        <option selected>Select A Service</option>
+                                    <select id="service_type" name="serviceType" class="form-select bg-light border-0" style="height: 55px;" required>
+                                        <option value="">Select A Service</option>
                                         <option value="1">Service 1</option>
                                         <option value="2">Service 2</option>
                                         <option value="3">Service 3</option>
                                     </select>
                                 </div>
                                 <div class="col-12">
-                                    <textarea class="form-control bg-light border-0" rows="3" placeholder="Message"></textarea>
+                                    <textarea id="message" class="form-control bg-light border-0" name="message"  rows="3" placeholder="Message"></textarea>
                                 </div>
                                 <div class="col-12">
-                                    <button class="btn btn-dark w-100 py-3" type="submit">Request A Quote</button>
+                                    <span class="btn btn-dark load" style="display: none"></span>
+                                    <button class="btn btn-dark w-100 py-3" type="submit" id="formSubmit">Request A Quote</button>
                                 </div>
+                                <div id="success" style="color: white"></div>
                             </div>
                         </form>
                     </div>
@@ -626,7 +634,75 @@
         </div>
     </div>
     <!-- Vendor End -->
-@endsection
-</body>
 
-</html>
+    <script type="text/javascript">
+        // $('.load').show();
+        // $('#formSubmit').hide();
+            
+        $(document).ready(function(){
+            $("#newForm").validate({
+                rules: {
+                    name: {
+                        required: true,
+                    },
+                    // message: {
+                    //     required: true,
+                    // },
+                    email: {
+                        required: true,
+                        email: true,
+                    },
+                    serviceType: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    name: {
+                        required: "Please enter your name",
+                    },
+                    // message: {
+                    //     required: "Please enter your message",
+                    // },
+                    email: {
+                        required: "Please enter a valid email address",
+                        email: "Please enter a valid email address",
+                    },
+                    serviceType: {
+                        required: "Please select a service type",
+                    }
+                },
+                submitHandler: function(form) {
+                    $('.load').show();
+                    $('#formSubmit').hide();
+                    // Form is valid, submit using AJAX
+                    var name = $("input[name=name]").val();
+                    var message = $("#message").val();
+                    var serviceType = $("#service_type").val();
+                    var email = $("input[name=email]").val();
+                    console.log(message);
+                    $.ajax({
+                        type:'POST',
+                        url:"{{ route('submitForm') }}",
+                        data:{
+                            name: name, 
+                            message: message, 
+                            email: email, 
+                            serviceType: serviceType,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success:function(data){
+                            $('.load').hide();
+                            $('#formSubmit').show();
+                            var messageBox = $('#success').text(data.message);
+                            setTimeout(function () {
+                                messageBox.fadeOut(500, function () {
+                                    messageBox.remove();
+                                });
+                            }, 3000);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+@endsection
